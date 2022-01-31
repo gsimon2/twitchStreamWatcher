@@ -1,0 +1,10 @@
+{
+  "name": "twitchStreamWarcher",
+  "version": "1.0.0",
+  "description": "Automated browser to watch a twitch stream and collect coins",
+  "main": "index.js",
+  "repository": "https://github.com/gsimon2/twitchStreamWatcher",
+  "author": "gsimon2",
+  "license": "MIT",
+  "private": true
+}
