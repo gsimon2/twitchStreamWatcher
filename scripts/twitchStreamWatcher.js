@@ -21,6 +21,15 @@ const parseArgs = () => {
         }
     );
 
+    parser.add_argument(
+        '--verbose', '-v',
+        {
+            help: 'Password to log into twitch with',
+            action: 'store_true',
+            default: false
+        }
+    );
+
     return parser.parse_args();
 }
 class TwitchStreamWatcher {
@@ -30,10 +39,15 @@ class TwitchStreamWatcher {
         let args = parseArgs();
         this.userName = args.user;
         this.password = args.password;
+        this.verbose = args.verbose;
+
+        this.bonusesClaimed = 0;
+
         this.pollingInterval = 60000;
         this.browserConfig = {
             headless: false,
             slowMo: 25,
+            defaultViewPort: null,
             executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
             args: []
         };
@@ -78,24 +92,33 @@ class TwitchStreamWatcher {
     }
 
     checkForBonus = async () => {
-        console.log('Checking for bonus...');
+        this.verbose && console.log('Checking for bonus...');
         let bonusSelector = '[aria-label="Claim Bonus"]';
         let balanceSelector = '[data-test-selector="balance-string"]';
         let bonus = await this.page.$(bonusSelector);
         let balanace = await this.page.$(balanceSelector);
 
-        if (bonus) {
-            console.log('Bonus found!');
-            await bonus.click();
-            console.log('Bonus claimed');
-        } else {
-            console.log('No bonus found');
+        try{
+            if (bonus) {
+                this.verbose && console.log('Bonus found');
+                await bonus.click();
+                console.log('Bonus claimed!');
+                this.bonusesClaimed++;
+            } else {
+                this.verbose && console.log('No bonus found');
+            }
+        } catch (ex) {
+            console.error('failed to claim bonus');
+            console.error(ex);
+            // oh well
         }
 
         try {
-            console.log(`Current points: ${await balanace.evaluate( el => el.textContent )}`);
-        } catch {
-            console.log('failed to display balance')
+            let pointsString = await balanace.evaluate( el => el.textContent );
+            console.log(`Current points: ${pointsString}. Bonuses claimed: ${this.bonusesClaimed}.`);
+        } catch (ex) {
+            console.error('failed to display balance');
+            console.error(ex);
             // oh well
         }
     }
