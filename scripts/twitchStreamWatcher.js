@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const ArgumentParser = require('argparse').ArgumentParser;
+const requestPassword = require('./passwordManager');
 
 const parseArgs = () => {
     const parser = new ArgumentParser({
@@ -10,14 +11,7 @@ const parseArgs = () => {
     parser.add_argument(
         '--user', '-u',
         {
-            help: 'User to log into twitch with'
-        }
-    );
-
-    parser.add_argument(
-        '--password', '-p',
-        {
-            help: 'Password to log into twitch with'
+            help: 'Username to log into twitch with'
         }
     );
 
@@ -30,6 +24,14 @@ const parseArgs = () => {
         }
     );
 
+    parser.add_argument(
+        '--twitchUser', '-t',
+        {
+            help: 'User name of the twitch stream to watch',
+            default: 'poke_beng'
+        }
+    )
+
     return parser.parse_args();
 }
 class TwitchStreamWatcher {
@@ -38,8 +40,8 @@ class TwitchStreamWatcher {
         console.log('Im awake');
         let args = parseArgs();
         this.userName = args.user;
-        this.password = args.password;
         this.verbose = args.verbose;
+        this.twitchUser = args.twitchUser;
 
         this.bonusesClaimed = 0;
 
@@ -48,15 +50,17 @@ class TwitchStreamWatcher {
             headless: false,
             slowMo: 25,
             defaultViewPort: null,
-            executablePath: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+            executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
             args: []
         };
     }
 
     run = async () => {
+        this.password = await requestPassword('Twitch Password > ');
+
         this.browser = await puppeteer.launch(this.browserConfig);
         this.page = await this.browser.newPage();
-        await this.page.goto('https://www.twitch.tv/poke_beng');
+        await this.page.goto(`https://www.twitch.tv/${this.twitchUser}`);
         await this.page.setViewport({ width: 1800, height: 900});
         await this.signIn(this.page);
 
