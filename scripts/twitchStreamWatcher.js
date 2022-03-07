@@ -18,14 +18,14 @@ const parseArgs = () => {
     parser.add_argument(
         '--verbose', '-v',
         {
-            help: 'Password to log into twitch with',
+            help: 'Print extra output to console',
             action: 'store_true',
             default: false
         }
     );
 
     parser.add_argument(
-        '--twitchUser', '-t',
+        '--twitchStreamer', '-t',
         {
             help: 'User name of the twitch stream to watch',
             default: 'poke_beng'
