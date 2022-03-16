@@ -1,5 +1,5 @@
 # Twitch Stream Watcher
-Script to spin up a browser instance to watch a twitch stream and collect viewing points via being a passive watcher and by claiming bonuses when they appear.
+A script to spin up a puppeteer controlled browser instance to watch a twitch stream and collect viewing points via being a passive watcher and by claiming bonuses as they appear.
 
 ## Usage 
 `yarn go` - Actives the scripts. Arguments:
