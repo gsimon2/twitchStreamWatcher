@@ -41,7 +41,8 @@ class TwitchStreamWatcher {
         let args = parseArgs();
         this.userName = args.user;
         this.verbose = args.verbose;
-        this.twitchUser = args.twitchUser;
+        this.twitchStreamer = args.twitchStreamer;
+        console.log(`I am watching the twitch stream for ${this.twitchStreamer}`);
 
         this.bonusesClaimed = 0;
 
@@ -60,7 +61,7 @@ class TwitchStreamWatcher {
 
         this.browser = await puppeteer.launch(this.browserConfig);
         this.page = await this.browser.newPage();
-        await this.page.goto(`https://www.twitch.tv/${this.twitchUser}`);
+        await this.page.goto(`https://www.twitch.tv/${this.twitchStreamer}`);
         await this.page.setViewport({ width: 1800, height: 900});
         await this.signIn(this.page);
 
@@ -114,7 +115,7 @@ class TwitchStreamWatcher {
         } catch (ex) {
             console.error('failed to claim bonus');
             console.error(ex);
-            // oh well
+            // oh wellsd
         }
 
         try {
