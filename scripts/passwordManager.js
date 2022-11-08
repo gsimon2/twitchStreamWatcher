@@ -22,7 +22,7 @@ const requestPassword = query => new Promise((resolve, reject) => {
     }
   });
   rl.question(query, value => {
-    rl.history = rl.history.slice(1);
+    // rl.history = rl.history.slice(1);
     resolve(value);
   });
 });

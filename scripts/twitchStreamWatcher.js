@@ -50,7 +50,7 @@ class TwitchStreamWatcher {
         this.browserConfig = {
             headless: false,
             slowMo: 25,
-            defaultViewPort: null,
+            defaultViewport: null,
             executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
             args: []
         };
@@ -62,7 +62,6 @@ class TwitchStreamWatcher {
         this.browser = await puppeteer.launch(this.browserConfig);
         this.page = await this.browser.newPage();
         await this.page.goto(`https://www.twitch.tv/${this.twitchStreamer}`);
-        await this.page.setViewport({ width: 1800, height: 900});
         await this.signIn(this.page);
 
         this.startPoll();
